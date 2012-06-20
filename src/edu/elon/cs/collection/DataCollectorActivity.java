@@ -1,6 +1,8 @@
 package edu.elon.cs.collection;
 
 /**
+ *  Main activity.
+ * 
  *  @author C. Brockmyre
  */
 
