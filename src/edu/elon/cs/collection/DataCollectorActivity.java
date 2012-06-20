@@ -1,5 +1,9 @@
 package edu.elon.cs.collection;
 
+/**
+ *  @author C. Brockmyre
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
