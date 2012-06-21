@@ -4,33 +4,31 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
- <TextView
-        android:id="@+id/accelerometer"
+	<TextView
+        android:id="@+id/gpstv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="GPS: warming up"
+        android:textSize="16dp" 
+	/>
+	
+	<TextView
+        android:id="@+id/acceltv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="Accelerometer:"
-        android:textSize="16dp" />
-
-    <TextView
-        android:id="@+id/xaxis"
+        android:textSize="16dp" 
+	/>
+	
+	<Button
+	    android:id="@+id/gobutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="X-axis:" />
-
-    <TextView
-        android:id="@+id/yaxis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Y-axis:" />
-
-    <TextView
-        android:id="@+id/zaxis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Z-axis:" />
+        android:text="Start Data Collection"
+        android:textSize="16dp" 
+	/>
 
 </LinearLayout>
