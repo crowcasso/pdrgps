@@ -37,9 +37,10 @@ public class GPSCollector extends Thread {
 		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10000.0f, locListener);
 
 		// File setup
-		File test = Environment.getExternalStorageDirectory();
+		File dir = Environment.getExternalStorageDirectory();
+		String fname = System.currentTimeMillis() + ".csv";
 		try {
-			outFile = new FileOutputStream(new File(test, "gpsFile.csv"));
+			outFile = new FileOutputStream(new File(dir, fname));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
