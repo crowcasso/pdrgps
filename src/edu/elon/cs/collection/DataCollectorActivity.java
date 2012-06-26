@@ -22,6 +22,7 @@ public class DataCollectorActivity extends Activity {
 	private Button go;
 
 	private GPSCollector gpsCollector;
+	private AccelerometerCollector accelCollector;
 
 	/** Called when the activity is first created. **/
 	@Override
@@ -31,16 +32,19 @@ public class DataCollectorActivity extends Activity {
 
 		/* UI setup */
 		gpstv = (TextView) findViewById(R.id.gpstv);
+		acceltv = (TextView) findViewById(R.id.acceltv);
 		go = (Button) findViewById(R.id.gobutton);
 		go.setOnClickListener(goButtonListener);
 		go.setEnabled(false);
 
 		setupGPS();
+		setupAccelerometer();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		exitAccelerometer();
 		exitGPS();
 	}
 
@@ -56,6 +60,16 @@ public class DataCollectorActivity extends Activity {
 			}
 		});  
 	}
+	
+	private void setupAccelerometer() {
+		/* Accelerometer Thread */
+		accelCollector = new AccelerometerCollector(getBaseContext(), new Handler() {
+			public void handleMessage(Message m) {
+				String msg = m.getData().getString("accelerometer-message");
+				acceltv.setText(msg);
+			}
+		});  
+	}
 
 	private void exitGPS() {
 		// exit the thread nicely
@@ -68,18 +82,34 @@ public class DataCollectorActivity extends Activity {
 			} catch (InterruptedException ex) {}
 		}
 	}
+	
+	private void exitAccelerometer() {
+		// exit the thread nicely
+		boolean retry = true;
+		accelCollector.setRunning(false);
+		while (retry) {
+			try {
+				accelCollector.join();
+				retry = false;
+			} catch (InterruptedException ex) {}
+		}
+	}
 
 	private OnClickListener goButtonListener = new OnClickListener() {
 		public void onClick(View view) {
 			if (go.getText().equals("End Data Collection")) {
 				exitGPS();
+				exitAccelerometer();
 				go.setEnabled(false);
 				go.setText("Start Data Collection");
 				setupGPS();
+				setupAccelerometer();
 			} else {
 				go.setText("End Data Collection");
 				gpsCollector.setRunning(true);
 				gpsCollector.start();
+				accelCollector.setRunning(true);
+				accelCollector.start();
 			}
 		}    	
 	};

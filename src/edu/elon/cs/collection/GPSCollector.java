@@ -38,7 +38,7 @@ public class GPSCollector extends Thread {
 
 		// File setup
 		File dir = Environment.getExternalStorageDirectory();
-		String fname = System.currentTimeMillis() + ".csv";
+		String fname = System.currentTimeMillis() + "-gps.csv";
 		try {
 			outFile = new FileOutputStream(new File(dir, fname));
 		} catch (FileNotFoundException e) {
@@ -72,7 +72,7 @@ public class GPSCollector extends Thread {
 
 			// only write the string if thread is running
 			if (running) {
-				String printOut = System.currentTimeMillis() + "," + location.getLatitude() + "," + location.getLongitude() + "," + location.getAccuracy();
+				String printOut = System.currentTimeMillis() + "," + location.getLatitude() + "," + location.getLongitude() + "," + location.getAccuracy() + "\n";
 				try {
 					outFile.write(printOut.getBytes());
 				} catch (IOException e) {
