@@ -27,11 +27,14 @@ public class GPSCollector extends Thread {
 	private boolean running;
 	private FileOutputStream outFile = null;
 	private Handler handler;
+	private boolean active;
 
 	public GPSCollector(Context context, Handler handler) {
 		this.running = false;
 		this.handler = handler;
 
+		this.active = false;
+		
 		// GPS setup
 		locManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE); 
 		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10000.0f, locListener);
@@ -69,6 +72,15 @@ public class GPSCollector extends Thread {
 	private LocationListener locListener = new LocationListener() {
 
 		public void onLocationChanged(Location location) {
+			
+			if (!active) {
+				Message msg = handler.obtainMessage();
+				Bundle b = new Bundle();
+				b.putString("gps-message", "Available");
+				msg.setData(b);
+				handler.sendMessage(msg);
+				active = true;
+			}
 
 			// only write the string if thread is running
 			if (running) {
@@ -86,14 +98,6 @@ public class GPSCollector extends Thread {
 		//@Override
 		public void onProviderEnabled(String arg0) {}
 		//@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			if (status == LocationProvider.AVAILABLE) {
-				Message msg = handler.obtainMessage();
-				Bundle b = new Bundle();
-				b.putString("gps-message", "Available");
-				msg.setData(b);
-				handler.sendMessage(msg);
-			}
-		}
+		public void onStatusChanged(String provider, int status, Bundle extras) {}
 	};
 }
