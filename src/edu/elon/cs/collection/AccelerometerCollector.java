@@ -35,7 +35,7 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 		this.handler = handler;
 
 		//accelerometer senor manager setup
-//		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		manager = (SensorManager) context.getSystemService(context.SENSOR_SERVICE);
 		
 /*
  * TODO
