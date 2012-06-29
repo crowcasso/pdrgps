@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.content.Context;
 import android.location.Location;
@@ -20,6 +22,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 public class GPSCollector extends Thread {
 
@@ -28,6 +32,7 @@ public class GPSCollector extends Thread {
 	private FileOutputStream outFile = null;
 	private Handler handler;
 	private boolean active;
+	private SimpleDateFormat sdf;
 
 	public GPSCollector(Context context, Handler handler) {
 		this.running = false;
@@ -37,11 +42,15 @@ public class GPSCollector extends Thread {
 		
 		// GPS setup
 		locManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE); 
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10000.0f, locListener);
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0.0f, locListener);
 
 		// File setup
 		File dir = Environment.getExternalStorageDirectory();
-		String fname = System.currentTimeMillis() + "-gps.csv";
+		sdf = new SimpleDateFormat("yyyy_MM_dd-7HH:mm:ss:SSS");
+		String currentDateAndTime = sdf.format(new Date());
+		
+		String fname = currentDateAndTime + "-gps.csv";
+		Log.d("GPSCollector", "New: " + fname);
 		try {
 			outFile = new FileOutputStream(new File(dir, fname));
 		} catch (FileNotFoundException e) {
@@ -60,6 +69,7 @@ public class GPSCollector extends Thread {
 		}
 
 		locManager.removeUpdates(locListener);
+		Log.d("GPSCollector", "closing  file");
 
 		try {
 			outFile.close();
@@ -81,10 +91,13 @@ public class GPSCollector extends Thread {
 				handler.sendMessage(msg);
 				active = true;
 			}
+			
+			Log.d("onLocationChanged", "HERE NOW!");
 
 			// only write the string if thread is running
 			if (running) {
-				String printOut = System.currentTimeMillis() + "," + location.getLatitude() + "," + location.getLongitude() + "," + location.getAccuracy() + "\n";
+				Log.d("onLocationChanged", "writing to file");
+				String printOut = sdf.format(new Date()) + "," + location.getLatitude() + "," + location.getLongitude() + "," + location.getAccuracy() + "\n";
 				try {
 					outFile.write(printOut.getBytes());
 				} catch (IOException e) {

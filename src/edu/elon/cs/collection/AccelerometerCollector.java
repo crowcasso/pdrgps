@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -17,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 public class AccelerometerCollector extends Thread {    //implements SensorEventListener{
 	
@@ -28,6 +31,7 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 	float y;
 	float z;
 	float orientation;
+	private SimpleDateFormat sdf;
 
 
 	public AccelerometerCollector(Context context, Handler handler) {
@@ -36,6 +40,9 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 
 		//accelerometer senor manager setup
 		manager = (SensorManager) context.getSystemService(context.SENSOR_SERVICE);
+		
+		sdf = new SimpleDateFormat("yyyy_MM_dd-7HH:mm:ss:SSS");
+		String currentDateAndTime = sdf.format(new Date());
 		
 /*
  * TODO
@@ -59,9 +66,10 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 
 		// File setup
 		File dir = Environment.getExternalStorageDirectory();
-		String fname = System.currentTimeMillis() + "-accelerometer.csv";
+		String fname = currentDateAndTime + "-accelerometer.csv";
 		try {
 			outFile = new FileOutputStream(new File(dir, fname));
+			Toast.makeText(context, "Creating: " + fname, Toast.LENGTH_SHORT);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +116,7 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 				orientation = -event.values[0];
 			}
 			if (running){
-				String str = System.currentTimeMillis() + "," + x + "," + y + "," + z + "," + orientation + "\n";
+				String str = sdf.format(new Date()) + "," + x + "," + y + "," + z + "," + orientation + "\n";
 				try {
 					outFile.write(str.getBytes());
 				} catch (IOException e) {

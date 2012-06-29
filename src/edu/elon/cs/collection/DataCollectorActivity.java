@@ -9,10 +9,12 @@ package edu.elon.cs.collection;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Handler;
 
 public class DataCollectorActivity extends Activity {
@@ -50,6 +52,7 @@ public class DataCollectorActivity extends Activity {
 
 	private void setupGPS() {
 		/* GPS Thread */
+		Log.d("TEST", "calling GPSCollector");
 		gpsCollector = new GPSCollector(getBaseContext(), new Handler() {
 			public void handleMessage(Message m) {
 				String msg = m.getData().getString("gps-message");
@@ -102,8 +105,8 @@ public class DataCollectorActivity extends Activity {
 				exitAccelerometer();
 				go.setEnabled(false);
 				go.setText("Start Data Collection");
-				setupGPS();
-				setupAccelerometer();
+				//setupGPS();
+				//setupAccelerometer();
 			} else {
 				go.setText("End Data Collection");
 				gpsCollector.setRunning(true);
