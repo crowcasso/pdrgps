@@ -30,7 +30,9 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 	float x;
 	float y;
 	float z;
-	float orientation;
+	float gx;
+	float gy;
+	float gz;	float orientation;
 	private SimpleDateFormat sdf;
 
 
@@ -62,7 +64,8 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 				SensorManager.SENSOR_DELAY_FASTEST);
 		manager.registerListener(sensorListener, manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_FASTEST);
-
+		manager.registerListener(sensorListener, manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
+				SensorManager.SENSOR_DELAY_FASTEST);
 
 		// File setup
 		File dir = Environment.getExternalStorageDirectory();
@@ -115,8 +118,13 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 			if(event.sensor.getType() == Sensor.TYPE_ORIENTATION){
 				orientation = -event.values[0];
 			}
+			if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+				gx = event.values[0];
+				gy = event.values[1];
+				gz = event.values[2];
+			}
 			if (running){
-				String str = sdf.format(new Date()) + "," + x + "," + y + "," + z + "," + orientation + "\n";
+				String str = System.currentTimeMillis() + "," + x + "," + y + "," + z + "," + orientation + "," + gx + "," + gy + "," + gz +  "\n";
 				try {
 					outFile.write(str.getBytes());
 				} catch (IOException e) {
