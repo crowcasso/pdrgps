@@ -22,16 +22,24 @@
         android:textSize="16dp" 
 	/>
 	
+		<TextView
+        android:id="@+id/direct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="16dp" 
+	/>
+	
 	<Button
 	    android:id="@+id/gobutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Start Data Collection"
+        android:text="Next"
         android:textSize="16dp" 
 	/>
 	
-	    <edu.elon.cs.mobile.compass.CompassView
+	    <edu.elon.cs.collection.CompassView
         android:id="@+id/compass"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

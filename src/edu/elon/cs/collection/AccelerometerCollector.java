@@ -118,8 +118,15 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 			}
 			if(event.sensor.getType() == Sensor.TYPE_ORIENTATION){
 				orientation = -event.values[0];
-				//compass.setAzimuth(-event.values[0]);
-				//compass.invalidate();
+				
+				String orientationString = Float.toString(orientation);
+				Message msg = handler.obtainMessage();
+				Bundle b = new Bundle();
+				b.putString("compass-message", orientationString);
+				msg.setData(b);
+				handler.sendMessage(msg);
+				
+				
 			}
 			if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
 				gx = event.values[0];
