@@ -32,7 +32,8 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 	float z;
 	float gx;
 	float gy;
-	float gz;	float orientation;
+	float gz;	
+	float orientation;
 	private SimpleDateFormat sdf;
 
 
@@ -117,6 +118,8 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 			}
 			if(event.sensor.getType() == Sensor.TYPE_ORIENTATION){
 				orientation = -event.values[0];
+				//compass.setAzimuth(-event.values[0]);
+				//compass.invalidate();
 			}
 			if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
 				gx = event.values[0];

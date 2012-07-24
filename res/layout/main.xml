@@ -30,5 +30,13 @@
         android:text="Start Data Collection"
         android:textSize="16dp" 
 	/>
+	
+	    <edu.elon.cs.mobile.compass.CompassView
+        android:id="@+id/compass"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/compass"
+        />
 
 </LinearLayout>

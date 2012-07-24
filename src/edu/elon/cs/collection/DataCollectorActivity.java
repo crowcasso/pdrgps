@@ -6,6 +6,8 @@ package edu.elon.cs.collection;
  *  @author C. Brockmyre and J. Hollingsworth
  */
 
+import edu.elon.cs.collection.CompassView;
+import edu.elon.cs.collection.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
@@ -25,6 +27,8 @@ public class DataCollectorActivity extends Activity {
 
 	private GPSCollector gpsCollector;
 	private AccelerometerCollector accelCollector;
+	
+	private CompassView compass;
 
 	/** Called when the activity is first created. **/
 	@Override
@@ -41,6 +45,8 @@ public class DataCollectorActivity extends Activity {
 
 		setupGPS();
 		setupAccelerometer();
+		
+		compass = (CompassView) findViewById(R.id.compass);
 	}
 
 	@Override
