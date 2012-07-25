@@ -35,6 +35,7 @@ public class DataCollectorActivity extends Activity {
 	private CompassView compass;
 	private float compassValue;
 	
+	private int counter;
 	private ArrayList<String> directions = new ArrayList<String>(Arrays.asList("1.	Face North",
 			"2.	Walk 30 steps forward – phone out front (steady)",
 			"3.	Turn left 180 degrees",
@@ -67,13 +68,13 @@ public class DataCollectorActivity extends Activity {
 		setContentView(R.layout.main);
 
 		/* UI setup */
-		//gpstv = (TextView) findViewById(R.id.gpstv);
-		//acceltv = (TextView) findViewById(R.id.acceltv);
 		direct = (TextView) findViewById(R.id.direct);
 		direct.setText("Ready");
 		go = (Button) findViewById(R.id.gobutton);
 		go.setOnClickListener(goButtonListener);
 		go.setEnabled(false);
+		
+		counter = 0;
 
 		setupGPS();
 		setupAccelerometer();
@@ -87,6 +88,7 @@ public class DataCollectorActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Toast.makeText(this, "ON_DESTROY", Toast.LENGTH_LONG).show();
 		exitAccelerometer();
 		exitGPS();
 	}
@@ -108,9 +110,10 @@ public class DataCollectorActivity extends Activity {
 		/* Accelerometer Thread */
 		accelCollector = new AccelerometerCollector(getBaseContext(), new Handler() {
 			public void handleMessage(Message m) {
-				String msg = m.getData().getString("accelerometer-message");
+				String msg = m.getData().getString("compass-message");
 				compassValue = Float.parseFloat(msg);
-
+				compass.setAzimuth(compassValue);
+				compass.invalidate();
 			}
 		});  
 	}
@@ -138,46 +141,25 @@ public class DataCollectorActivity extends Activity {
 			} catch (InterruptedException ex) {}
 		}
 	}
-
-	private int counter = 0;
 	
 	private OnClickListener goButtonListener = new OnClickListener() {
-		/*
-		public void onClick(View view) {
-			if (go.getText().equals("End Data Collection")) {
-				exitGPS();
-				exitAccelerometer();
-				go.setEnabled(false);
-				go.setText("Start Data Collection");
-				//setupGPS();
-				//setupAccelerometer();
-			} else {
-				go.setText("End Data Collection");
-				gpsCollector.setRunning(true);
-				gpsCollector.start();
-				accelCollector.setRunning(true);
-				accelCollector.start();
-			}
-		} 
-		*/
+	
 		public void onClick(View view){
 			if (direct.getText().equals("Ready")){
 				gpsCollector.setRunning(true);
 				gpsCollector.start();
 				accelCollector.setRunning(true);
 				accelCollector.start();
-			}
-			if (direct.getText().equals("23.	Turn right 360 degrees – phone looking up and down")){
-				
-			}
-			else {
 				direct.setText(directions.get(counter));
-				counter = counter+1;
-				if (direct.getText().equals("Done")){
+				counter++;
+			} else {
+				direct.setText(directions.get(counter));
+				counter++;
+				if (direct.getText().equals("DONE")){
 					exitGPS();
 					exitAccelerometer();
 					go.setEnabled(false);
-					go.setText("Start Data Collection");
+					finish();
 				}
 			}
 

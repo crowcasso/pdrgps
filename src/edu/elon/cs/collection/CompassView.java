@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 import edu.elon.cs.collection.R;
 
@@ -23,7 +24,7 @@ public class CompassView extends ImageView {
 	}
 
 	public void setAzimuth(float azimuth){
-		this.azimuth = azimuth;
+		this.azimuth = (azimuth - 90.0f)%360;
 	}
 	
 	@Override
