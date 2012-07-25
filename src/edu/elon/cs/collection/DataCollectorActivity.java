@@ -6,13 +6,20 @@ package edu.elon.cs.collection;
  *  @author C. Brockmyre and J. Hollingsworth
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import edu.elon.cs.collection.CompassView;
 import edu.elon.cs.collection.R;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +41,10 @@ public class DataCollectorActivity extends Activity {
 	
 	private CompassView compass;
 	private float compassValue;
+	
+	private FileOutputStream outFile = null;
+	private SimpleDateFormat sdf;
+
 	
 	private int counter;
 	private ArrayList<String> directions = new ArrayList<String>(Arrays.asList("1.	Face North",
@@ -80,9 +91,19 @@ public class DataCollectorActivity extends Activity {
 		setupAccelerometer();
 		
 		compass = (CompassView) findViewById(R.id.compass);
-		
 		compass.setAzimuth(compassValue);
 		compass.invalidate();
+		
+		sdf = new SimpleDateFormat("yyyy_MM_dd-7HH:mm:ss:SSS");
+		String currentDateAndTime = sdf.format(new Date());
+		File dir = Environment.getExternalStorageDirectory();
+		String fname = currentDateAndTime + "-directions.csv";
+		try {
+			outFile = new FileOutputStream(new File(dir, fname));
+			//Toast.makeText(context, "Creating: " + fname, Toast.LENGTH_SHORT);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -91,6 +112,12 @@ public class DataCollectorActivity extends Activity {
 		Toast.makeText(this, "ON_DESTROY", Toast.LENGTH_LONG).show();
 		exitAccelerometer();
 		exitGPS();
+		
+		try {
+			outFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setupGPS() {
@@ -142,6 +169,16 @@ public class DataCollectorActivity extends Activity {
 		}
 	}
 	
+	private void recordDirection(String displayedDirection){
+		String str = sdf.format(new Date()) + "," + displayedDirection;
+		try {
+			outFile.write(str.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private OnClickListener goButtonListener = new OnClickListener() {
 	
 		public void onClick(View view){
@@ -151,13 +188,20 @@ public class DataCollectorActivity extends Activity {
 				accelCollector.setRunning(true);
 				accelCollector.start();
 				direct.setText(directions.get(counter));
+				recordDirection(directions.get(counter));
 				counter++;
 			} else {
 				direct.setText(directions.get(counter));
+				recordDirection(directions.get(counter));
 				counter++;
 				if (direct.getText().equals("DONE")){
 					exitGPS();
 					exitAccelerometer();
+					try {
+						outFile.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					go.setEnabled(false);
 					finish();
 				}

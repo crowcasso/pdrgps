@@ -46,20 +46,6 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 		
 		sdf = new SimpleDateFormat("yyyy_MM_dd-7HH:mm:ss:SSS");
 		String currentDateAndTime = sdf.format(new Date());
-		
-/*
- * TODO
- * why does that line ^ not work?
- * Sensor.TYPE_ORIENTATION is deprecated and should be SensorManager.getOrientation
- * 
- * i need to put this somewhere but not sure where?
-				Message msg = handler.obtainMessage();
-				Bundle b = new Bundle();
-				b.putString("gps-message", "Available");
-				msg.setData(b);
-				handler.sendMessage(msg);
-			
- */
 
 		manager.registerListener(sensorListener, manager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 				SensorManager.SENSOR_DELAY_FASTEST);
@@ -134,7 +120,7 @@ public class AccelerometerCollector extends Thread {    //implements SensorEvent
 				gz = event.values[2];
 			}
 			if (running){
-				String str = System.currentTimeMillis() + "," + x + "," + y + "," + z + "," + orientation + "," + gx + "," + gy + "," + gz +  "\n";
+				String str = sdf.format(new Date()) + "," + x + "," + y + "," + z + "," + orientation + "," + gx + "," + gy + "," + gz +  "\n";
 				try {
 					outFile.write(str.getBytes());
 				} catch (IOException e) {
