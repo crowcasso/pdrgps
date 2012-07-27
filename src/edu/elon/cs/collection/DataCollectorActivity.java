@@ -162,7 +162,7 @@ public class DataCollectorActivity extends Activity {
 	}
 
 	private void recordDirection(String displayedDirection){
-		String str = sdf.format(new Date()) + "," + displayedDirection;
+		String str = sdf.format(new Date()) + "," + displayedDirection + "\n";
 		try {
 			directionsFile.write(str.getBytes());
 		} catch (IOException e) { e.printStackTrace(); }
