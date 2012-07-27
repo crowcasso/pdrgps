@@ -24,7 +24,7 @@ public class CompassView extends ImageView {
 	}
 
 	public void setAzimuth(float azimuth){
-		this.azimuth = (azimuth - 90.0f)%360;
+		this.azimuth = (azimuth + 270.0f)%360;
 	}
 	
 	@Override
