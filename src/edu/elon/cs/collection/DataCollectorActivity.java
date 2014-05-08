@@ -37,7 +37,7 @@ import android.widget.TextView;
 public class DataCollectorActivity extends Activity {
 
 	private TextView txtDirections;
-	private Button goButton;
+	private Button theGoButton;
 
 	private SensorManager sensorManager;
 	private LocationManager locManager;
@@ -94,9 +94,9 @@ public class DataCollectorActivity extends Activity {
 		/* UI setup */
 		txtDirections = (TextView) findViewById(R.id.direct);
 		txtDirections.setText("Ready");
-		goButton = (Button) findViewById(R.id.gobutton);
-		goButton.setOnClickListener(goButtonListener);
-		goButton.setEnabled(false);
+		theGoButton = (Button) findViewById(R.id.gobutton);
+		theGoButton.setOnClickListener(goButtonListener);
+		theGoButton.setEnabled(false);
 		compass = (CompassView) findViewById(R.id.compass);
 
 		/* walk through counter */
@@ -234,7 +234,7 @@ public class DataCollectorActivity extends Activity {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					goButton.setEnabled(false);
+					theGoButton.setEnabled(false);
 					finish();
 				}
 			}
@@ -246,7 +246,7 @@ public class DataCollectorActivity extends Activity {
 		public void onLocationChanged(Location location) {
 
 			gpsAcquired = true;
-			goButton.setEnabled(true);
+			theGoButton.setEnabled(true);
 
 			String printOut = sdf.format(new Date()) + "," + location.getLatitude() + "," + location.getLongitude() + "," + location.getAccuracy() + "\n";
 			try {
